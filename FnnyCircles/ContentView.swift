@@ -8,14 +8,59 @@
 import SwiftUI
 
 struct ContentView: View {
+    
+    @State private var enabled = false
+    @State private var dragAmount = CGSize.zero
+    @State private var delay = 16.0
+    @State private var size = 30.0
+    
+    let colors: [Color] = [.red, .orange, .yellow, .green, .blue, .purple]
+    
     var body: some View {
         VStack {
-            Image(systemName: "globe")
-                .imageScale(.large)
-                .foregroundColor(.accentColor)
-            Text("Hello, world!")
+            Spacer()
+            ZStack {
+                ForEach(0..<6) {num in
+                    Circle()
+                        .fill(colors[num])
+                        .frame(width: size * CGFloat(num + 1))
+                        .zIndex(Double(-num))
+                        .offset(dragAmount)
+                        .animation(.default.delay(Double(num) / delay), value: dragAmount)
+                }
+            }
+            .gesture(
+                DragGesture()
+                    .onChanged { dragAmount = $0.translation }
+                    .onEnded { _ in
+                        dragAmount = .zero
+                        enabled.toggle()
+                    }
+            )
+            Spacer()
+            HStack {
+                Text("size")
+                    .frame(width: 50)
+                    .foregroundColor(.white)
+                Slider(value: $size, in: 10...50)
+                Text(String(format: "%.f", size))
+                    .frame(width: 30)
+                    .foregroundColor(.white)
+            }
+            .padding()
+            
+            HStack {
+                Text("delay")
+                    .frame(width: 50)
+                    .foregroundColor(.white)
+                Slider(value: $delay, in: 1...30)
+                Text(String(format: "%.f", delay))
+                    .frame(width: 30)
+                    .foregroundColor(.white)
+            }
+                .padding()
         }
-        .padding()
+        .background(.black)
     }
 }
 
