@@ -14,7 +14,7 @@ struct ContentView: View {
     @State private var delay = 16.0
     @State private var size = 30.0
     
-    let colors: [Color] = [.red, .orange, .yellow, .green, .blue, .purple]
+    @State private var colors: [Color] = [.red, .orange, .yellow, .green, .blue, .purple]
     
     var body: some View {
         VStack {
@@ -38,11 +38,19 @@ struct ContentView: View {
                     }
             )
             Spacer()
+            Button {
+                colors.shuffle()
+            } label: {
+                Text("-=RNDM=-")
+                    .foregroundColor(.blue)
+            }
+
             HStack {
                 Text("size")
                     .frame(width: 50)
                     .foregroundColor(.white)
                 Slider(value: $size, in: 10...50)
+                    .tint(.yellow)
                 Text(String(format: "%.f", size))
                     .frame(width: 30)
                     .foregroundColor(.white)
@@ -54,6 +62,7 @@ struct ContentView: View {
                     .frame(width: 50)
                     .foregroundColor(.white)
                 Slider(value: $delay, in: 1...30)
+                    .tint(.green)
                 Text(String(format: "%.f", delay))
                     .frame(width: 30)
                     .foregroundColor(.white)
